@@ -169,7 +169,7 @@ html, body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
 }
 
 .navbutton:hover {
@@ -178,6 +178,8 @@ html, body {
 
 .navicon {
     font-size: 1.5rem;
+    flex-basis: 50%;
+    margin-bottom: 4%;
 }
 
 #stats {
