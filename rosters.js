@@ -1,6 +1,7 @@
 var picker;
-var rosters = [];
+var rosters = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 var index = 0;
+var loadedTeams = [];
 
 $('document').ready(function(){
   picker = $('#teams');
@@ -14,7 +15,13 @@ $('document').ready(function(){
 
   picker.on('change', function(){
     // alert(picker.find(":selected").index());
-    loadTeam(picker.find(":selected").index());
+    // loadTeam(picker.find(":selected").index());
+    index = picker.find(":selected").index();
+    if (loadedTeams.includes(picker.children().eq(index).text())) {
+      loadTeam(index);
+    } else {
+      getTeam("https://sheets.googleapis.com/v4/spreadsheets/1Al-vbjGQwuTQ2Cu2L_scv-Xw7NmOtIhTeI7YYKRfsyU/values/" + picker.children().eq(index).text().replace(/\ /g, "%20") + "!A2:I50?key=AIzaSyCyE0J97OKvHRbhWatfQQ9YI6HlR-Z8qDg");
+    }
   });
 
   $('#history').on('mousedown', function(){
@@ -30,17 +37,16 @@ function getTeam(url) {
       // console.log(response.values);
       let data = response.values;
       // alert(data);
-      rosters.push(data);
-      if (index == 0) {
-        loadTeam(0);
-      }
-      index++;
-      if (index < picker.children().length) {
-        // alert(picker.children().eq(index).text().replace(/\ /g, "%20"));
-        getTeam("https://sheets.googleapis.com/v4/spreadsheets/1Al-vbjGQwuTQ2Cu2L_scv-Xw7NmOtIhTeI7YYKRfsyU/values/" + picker.children().eq(index).text().replace(/\ /g, "%20") + "!A2:I50?key=AIzaSyCyE0J97OKvHRbhWatfQQ9YI6HlR-Z8qDg")
-      } else {
-        picker.prop('disabled', false);
-      }
+      rosters[index] = data;
+      loadedTeams.push(picker.children().eq(index).text());
+      loadTeam(index);
+      picker.prop('disabled', false);
+      // if (index < picker.children().length) {
+      //   // alert(picker.children().eq(index).text().replace(/\ /g, "%20"));
+      //   getTeam("https://sheets.googleapis.com/v4/spreadsheets/1Al-vbjGQwuTQ2Cu2L_scv-Xw7NmOtIhTeI7YYKRfsyU/values/" + picker.children().eq(index).text().replace(/\ /g, "%20") + "!A2:I50?key=AIzaSyCyE0J97OKvHRbhWatfQQ9YI6HlR-Z8qDg")
+      // } else {
+      //   picker.prop('disabled', false);
+      // }
     },
     error: function(error) {
       console.log(error);
